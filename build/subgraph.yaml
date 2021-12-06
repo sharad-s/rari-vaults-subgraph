@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: VaultFactory
@@ -17,13 +17,13 @@ dataSources:
         - VaultDeployed
       abis:
         - name: VaultFactory
-          file: ./abis/VaultFactory.json
+          file: VaultFactory/abis/VaultFactory.json
         - name: Vault
-          file: ./abis/Vault.json
+          file: VaultFactory/abis/Vault.json
       eventHandlers:
         - event: VaultDeployed(address,address)
           handler: handleVaultDeployed
-      file: ./src/mapping.ts
+      file: VaultFactory/VaultFactory.wasm
 templates:
   - name: Vault
     kind: ethereum/contract
@@ -34,12 +34,12 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/mappings/vault.ts
+      file: templates/Vault/Vault.wasm
       entities:
         - Vault
       abis:
         - name: Vault
-          file: ./abis/Vault.json
+          file: Vault/abis/Vault.json
       eventHandlers:
         - event: Initialized(indexed address)
           handler: handleVaultInitialized
