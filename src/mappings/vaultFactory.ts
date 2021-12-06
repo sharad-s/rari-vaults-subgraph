@@ -2,8 +2,8 @@ import { BigInt } from "@graphprotocol/graph-ts";
 import {
   VaultFactory,
   VaultDeployed,
-} from "../generated/VaultFactory/VaultFactory";
-import { Vault } from "../generated/schema";
+} from "../../generated/VaultFactory/VaultFactory";
+import { Vault } from "../../generated/schema";
 
 /*
 export function handleAuthorityUpdated(event: AuthorityUpdated): void {
@@ -53,11 +53,11 @@ export function handleAuthorityUpdated(event: AuthorityUpdated): void {
 */
 
 export function handleVaultDeployed(event: VaultDeployed): void {
-  const vaultId = event.params.vault;
-  const underlying = event.params.underlying;
+  let vaultId = event.params.vault;
+  let underlying = event.params.underlying;
 
-  // const context = new DataSourceContext();
-  const vault = new Vault(vaultId.toHexString());
+  // let context = new DataSourceContext();
+  let vault = new Vault(vaultId.toHexString());
 
   vault.underlying = underlying;
   vault.initialized = false;

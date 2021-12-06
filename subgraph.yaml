@@ -23,7 +23,7 @@ dataSources:
       eventHandlers:
         - event: VaultDeployed(address,address)
           handler: handleVaultDeployed
-      file: ./src/mapping.ts
+      file: ./src/mappings/vaultFactory.ts
 templates:
   - name: Vault
     kind: ethereum/contract
