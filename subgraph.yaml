@@ -1,0 +1,29 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: VaultFactory
+    network: kovan
+    source:
+      address: "0xc99a698dfB1eB38E0649e6d2d3462Bc2476dE0B4"
+      abi: VaultFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - AuthorityUpdated
+        - OwnerUpdated
+        - VaultDeployed
+      abis:
+        - name: VaultFactory
+          file: ./abis/VaultFactory.json
+      eventHandlers:
+        - event: AuthorityUpdated(indexed address)
+          handler: handleAuthorityUpdated
+        - event: OwnerUpdated(indexed address)
+          handler: handleOwnerUpdated
+        - event: VaultDeployed(address,address)
+          handler: handleVaultDeployed
+      file: ./src/mapping.ts
