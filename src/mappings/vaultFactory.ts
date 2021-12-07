@@ -1,6 +1,7 @@
 import { VaultDeployed } from "../../generated/VaultFactory/VaultFactory";
 import { Vault } from "../../generated/schema";
 import { log } from "@graphprotocol/graph-ts";
+import { Vault as VaultTemplate } from "../../generated/templates";
 
 export function handleVaultDeployed(event: VaultDeployed): void {
   let vaultId = event.params.vault;
@@ -14,6 +15,6 @@ export function handleVaultDeployed(event: VaultDeployed): void {
   vault.underlying = underlying;
   vault.initialized = false;
 
-  // ComptrollerTemplate.createWithContext(comptrollerAddress, context);
+  VaultTemplate.create(vaultId);
   vault.save();
 }
