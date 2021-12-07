@@ -20,6 +20,8 @@ dataSources:
           file: ./abis/VaultFactory.json
         - name: Vault
           file: ./abis/Vault.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: VaultDeployed(address,address)
           handler: handleVaultDeployed

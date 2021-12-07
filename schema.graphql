@@ -1,5 +1,7 @@
 type Vault @entity {
   id: ID!
-  underlying: Bytes! # address
   initialized: Boolean!
+  underlying: Bytes! # address
+  underlyingSymbol: String!
+  underlyingDecimals: Int!
 }

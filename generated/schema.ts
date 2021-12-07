@@ -42,6 +42,15 @@ export class Vault extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get initialized(): boolean {
+    let value = this.get("initialized");
+    return value.toBoolean();
+  }
+
+  set initialized(value: boolean) {
+    this.set("initialized", Value.fromBoolean(value));
+  }
+
   get underlying(): Bytes {
     let value = this.get("underlying");
     return value.toBytes();
@@ -51,12 +60,21 @@ export class Vault extends Entity {
     this.set("underlying", Value.fromBytes(value));
   }
 
-  get initialized(): boolean {
-    let value = this.get("initialized");
-    return value.toBoolean();
+  get underlyingSymbol(): string {
+    let value = this.get("underlyingSymbol");
+    return value.toString();
   }
 
-  set initialized(value: boolean) {
-    this.set("initialized", Value.fromBoolean(value));
+  set underlyingSymbol(value: string) {
+    this.set("underlyingSymbol", Value.fromString(value));
+  }
+
+  get underlyingDecimals(): i32 {
+    let value = this.get("underlyingDecimals");
+    return value.toI32();
+  }
+
+  set underlyingDecimals(value: i32) {
+    this.set("underlyingDecimals", Value.fromI32(value));
   }
 }

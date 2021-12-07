@@ -1,5 +1,5 @@
 import { Initialized } from "../../generated/VaultFactory/Vault";
-import { Vault } from "../../generated/schema";
+import { Vault as VaultSchema } from "../../generated/schema";
 import { log } from "@graphprotocol/graph-ts";
 
 export function handleVaultInitialized(event: Initialized): void {
@@ -8,7 +8,7 @@ export function handleVaultInitialized(event: Initialized): void {
   log.info("🏁 Vault Initalized at address {}", [vaultId.toHexString()]);
 
   // const context = new DataSourceContext();
-  let vault = Vault.load(vaultId.toHexString());
+  let vault = VaultSchema.load(vaultId.toHexString());
 
   vault.initialized = true;
   vault.save();
