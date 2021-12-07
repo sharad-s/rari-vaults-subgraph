@@ -51,6 +51,40 @@ export class Vault extends Entity {
     this.set("initialized", Value.fromBoolean(value));
   }
 
+  get targetFloatPercent(): BigInt | null {
+    let value = this.get("targetFloatPercent");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set targetFloatPercent(value: BigInt | null) {
+    if (value === null) {
+      this.unset("targetFloatPercent");
+    } else {
+      this.set("targetFloatPercent", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get feePercent(): BigInt | null {
+    let value = this.get("feePercent");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set feePercent(value: BigInt | null) {
+    if (value === null) {
+      this.unset("feePercent");
+    } else {
+      this.set("feePercent", Value.fromBigInt(value as BigInt));
+    }
+  }
+
   get underlying(): Bytes {
     let value = this.get("underlying");
     return value.toBytes();
@@ -78,6 +112,15 @@ export class Vault extends Entity {
     this.set("underlyingDecimals", Value.fromI32(value));
   }
 
+  get underlyingIsWeth(): boolean {
+    let value = this.get("underlyingIsWeth");
+    return value.toBoolean();
+  }
+
+  set underlyingIsWeth(value: boolean) {
+    this.set("underlyingIsWeth", Value.fromBoolean(value));
+  }
+
   get lastHarvestBlock(): BigInt | null {
     let value = this.get("lastHarvestBlock");
     if (value === null || value.kind == ValueKind.NULL) {
@@ -92,6 +135,23 @@ export class Vault extends Entity {
       this.unset("lastHarvestBlock");
     } else {
       this.set("lastHarvestBlock", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get harvestWindow(): BigInt | null {
+    let value = this.get("harvestWindow");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set harvestWindow(value: BigInt | null) {
+    if (value === null) {
+      this.unset("harvestWindow");
+    } else {
+      this.set("harvestWindow", Value.fromBigInt(value as BigInt));
     }
   }
 
@@ -126,23 +186,6 @@ export class Vault extends Entity {
       this.unset("nextHarvestDelay");
     } else {
       this.set("nextHarvestDelay", Value.fromBigInt(value as BigInt));
-    }
-  }
-
-  get harvestWindow(): BigInt | null {
-    let value = this.get("harvestWindow");
-    if (value === null || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set harvestWindow(value: BigInt | null) {
-    if (value === null) {
-      this.unset("harvestWindow");
-    } else {
-      this.set("harvestWindow", Value.fromBigInt(value as BigInt));
     }
   }
 }

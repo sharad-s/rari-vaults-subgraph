@@ -1,11 +1,16 @@
 type Vault @entity {
   id: ID!
+
+  # Public Attributes
   initialized: Boolean!
+  targetFloatPercent: BigInt
+  feePercent: BigInt
 
   # Underlying
   underlying: Bytes! # address
   underlyingSymbol: String!
   underlyingDecimals: Int!
+  underlyingIsWeth: Boolean
 
   #Harvest data
   lastHarvestBlock: BigInt
@@ -16,27 +21,34 @@ type Vault @entity {
 
 }
 
+## Public Attributes
+# vault.isInitialized: number ✅
+# vault.underlyingIsWETH: bool ✅
+# vault.targetFloatPercent: number ✅
+# vault.feePercent: number ✅
 
+## Harvest
+# vault.lastHarvestBlockNum: number ✅
+# vault.harvestDelay: number ✅
+# vault.harvestWindow: number ✅
+# vault.lastHarvestWindowStart: number
+# vault.nextHarvestDelay: number ✅
+
+## Holdings/Float/Supply
 # vault.totalHoldings: number
 # vault.totalStrategyHoldings: number
 # vault.totalFloat: number
+# vault.totalSupply: number
+
 # vault.maxLockedProfit: number
-# vault.lockedProfit: number
-# vault.exchangeRate: number
-# vault.balanceOf{user}
-# vault.balanceOfUnderlying{user}
+# vault.lockedProfit: number // view: gets updated as much as possible? 
+# vault.exchangeRate: number // view: gets updated as much as possible? 
+
+# vault.balanceOf{user} // don't implement
+# vault.balanceOfUnderlying{user} // don't implement
+
 # vault.withdrawalQueue: strategy[]
 # vault.activeStrategies: strategy[]
 # vault.trustedStrategies: strategy[]
-# vault.isInitialized: number
-# vault.totalSupply: number
-# vault.underlyingIsWETH: bool
-# vault.targetFloatPercent: number
-# vault.feePercent: number
 
-# vault.lastHarvestBlockNum: number
-# vault.harvestDelay: number
-# vault.harvestWindow: number
-# vault.lastHarvestWindowStart: number
-# vault.nextHarvestDelay: number
 

@@ -43,8 +43,7 @@ templates:
         - name: Vault
           file: ./abis/Vault.json
       eventHandlers:
-        - event: Initialized(indexed address)
-          handler: handleVaultInitialized
+        # Harvest
         - event: Harvest(indexed address,address[])
           handler: handleHarvest
         - event: HarvestWindowUpdated(indexed address,uint128)
@@ -53,4 +52,41 @@ templates:
           handler: handleHarvestDelayUpdated
         - event: HarvestDelayUpdateScheduled(indexed address,uint64)
           handler: handleHarvestDelayUpdateScheduled
-        
+        # Public Attributes
+        - event: Initialized(indexed address)
+          handler: handleVaultInitialized
+        - event: UnderlyingIsWETHUpdated(indexed address,bool)
+          handler: handleUpdateUnderlyingIsWeth
+        - event: TargetFloatPercentUpdated(indexed address,uint256)
+          handler: handleTargetFloatPercentUpdated
+        - event: FeePercentUpdated(indexed address,uint256)
+          handler: handleFeePercentUpdated
+
+
+
+# - Approval(indexed address,indexed address,uint256)
+# - AuthorityUpdated(indexed address)
+# - Deposit(indexed address,uint256)
+# - FeePercentUpdated(indexed address,uint256)
+# - FeesClaimed(indexed address,uint256)
+# - Harvest(indexed address,address[])
+# - HarvestDelayUpdateScheduled(indexed address,uint64)
+# - HarvestDelayUpdated(indexed address,uint64)
+# - HarvestWindowUpdated(indexed address,uint128)
+# - Initialized(indexed address)
+# - OwnerUpdated(indexed address)
+# - StrategyDeposit(indexed address,indexed address,uint256)
+# - StrategyDistrusted(indexed address,indexed address)
+# - StrategySeized(indexed address,indexed address)
+# - StrategyTrusted(indexed address,indexed address)
+# - StrategyWithdrawal(indexed address,indexed address,uint256)
+# - TargetFloatPercentUpdated(indexed address,uint256)
+# - Transfer(indexed address,indexed address,uint256)
+# - UnderlyingIsWETHUpdated(indexed address,bool)
+# - Withdraw(indexed address,uint256)
+# - WithdrawalQueueIndexReplaced(indexed address,uint256,indexed address,indexed address)
+# - WithdrawalQueueIndexReplacedWithTip(indexed address,uint256,indexed address,indexed address)
+# - WithdrawalQueueIndexesSwapped(indexed address,uint256,uint256,indexed address,indexed address)
+# - WithdrawalQueuePopped(indexed address,indexed address)
+# - WithdrawalQueuePushed(indexed address,indexed address)
+# - WithdrawalQueueSet(indexed address,address[])

@@ -1,9 +1,12 @@
 import {
+  FeePercentUpdated,
   Harvest,
   HarvestDelayUpdated,
   HarvestDelayUpdateScheduled,
   HarvestWindowUpdated,
   Initialized,
+  TargetFloatPercentUpdated,
+  UnderlyingIsWETHUpdated,
 } from "../../generated/VaultFactory/Vault";
 import { Vault as VaultSchema } from "../../generated/schema";
 import { log } from "@graphprotocol/graph-ts";
@@ -75,5 +78,54 @@ export function handleHarvestDelayUpdateScheduled(
 
   let vault = VaultSchema.load(vaultId.toHexString());
   vault.nextHarvestDelay = nextHarvestDelay;
+  vault.save();
+}
+
+// Updates vault.underlyingIsWeth
+export function handleUpdateUnderlyingIsWeth(
+  event: UnderlyingIsWETHUpdated
+): void {
+  let vaultId = event.address;
+  let underlyingIsWETH = event.params.newUnderlyingIsWETH;
+
+  log.info("⏳ UnderlyingIsWeth Updated, Vault {}, UnderlyingIsWeth: {}", [
+    vaultId.toHexString(),
+    underlyingIsWETH.toString(),
+  ]);
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+  vault.underlyingIsWeth = underlyingIsWETH;
+  vault.save();
+}
+
+// Updates vault.targetFloatPercent
+export function handleTargetFloatPercentUpdated(
+  event: TargetFloatPercentUpdated
+): void {
+  let vaultId = event.address;
+  let newTargetFloatPercent = event.params.newTargetFloatPercent;
+
+  log.info(
+    "🏖 TargetFloatPercentUpdated, Vault {}, New Target Float Percent: {}",
+    [vaultId.toHexString(), newTargetFloatPercent.toString()]
+  );
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+  vault.targetFloatPercent = newTargetFloatPercent;
+  vault.save();
+}
+
+// Updates vault.feePercent
+export function handleFeePercentUpdated(event: FeePercentUpdated): void {
+  let vaultId = event.address;
+  let newFeePercent = event.params.newFeePercent;
+
+  log.info("🏦 FeePercentUpdated, Vault {}, New Fee Percent: {}", [
+    vaultId.toHexString(),
+    newFeePercent.toString(),
+  ]);
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+  vault.feePercent = newFeePercent;
   vault.save();
 }
