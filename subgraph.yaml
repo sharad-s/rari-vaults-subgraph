@@ -45,3 +45,12 @@ templates:
       eventHandlers:
         - event: Initialized(indexed address)
           handler: handleVaultInitialized
+        - event: Harvest(indexed address,address[])
+          handler: handleHarvest
+        - event: HarvestWindowUpdated(indexed address,uint128)
+          handler: handleHarvestWindowUpdated
+        - event: HarvestDelayUpdated(indexed address,uint64)
+          handler: handleHarvestDelayUpdated
+        - event: HarvestDelayUpdateScheduled(indexed address,uint64)
+          handler: handleHarvestDelayUpdateScheduled
+        

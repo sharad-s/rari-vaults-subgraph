@@ -77,4 +77,72 @@ export class Vault extends Entity {
   set underlyingDecimals(value: i32) {
     this.set("underlyingDecimals", Value.fromI32(value));
   }
+
+  get lastHarvestBlock(): BigInt | null {
+    let value = this.get("lastHarvestBlock");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set lastHarvestBlock(value: BigInt | null) {
+    if (value === null) {
+      this.unset("lastHarvestBlock");
+    } else {
+      this.set("lastHarvestBlock", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get harvestDelay(): BigInt | null {
+    let value = this.get("harvestDelay");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set harvestDelay(value: BigInt | null) {
+    if (value === null) {
+      this.unset("harvestDelay");
+    } else {
+      this.set("harvestDelay", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get nextHarvestDelay(): BigInt | null {
+    let value = this.get("nextHarvestDelay");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set nextHarvestDelay(value: BigInt | null) {
+    if (value === null) {
+      this.unset("nextHarvestDelay");
+    } else {
+      this.set("nextHarvestDelay", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get harvestWindow(): BigInt | null {
+    let value = this.get("harvestWindow");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set harvestWindow(value: BigInt | null) {
+    if (value === null) {
+      this.unset("harvestWindow");
+    } else {
+      this.set("harvestWindow", Value.fromBigInt(value as BigInt));
+    }
+  }
 }

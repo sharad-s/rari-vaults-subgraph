@@ -1,7 +1,42 @@
 type Vault @entity {
   id: ID!
   initialized: Boolean!
+
+  # Underlying
   underlying: Bytes! # address
   underlyingSymbol: String!
   underlyingDecimals: Int!
+
+  #Harvest data
+  lastHarvestBlock: BigInt
+  harvestWindow: BigInt
+  harvestDelay: BigInt
+  nextHarvestDelay: BigInt
+  # lastHarvestWindowStartBlock:  
+
 }
+
+
+# vault.totalHoldings: number
+# vault.totalStrategyHoldings: number
+# vault.totalFloat: number
+# vault.maxLockedProfit: number
+# vault.lockedProfit: number
+# vault.exchangeRate: number
+# vault.balanceOf{user}
+# vault.balanceOfUnderlying{user}
+# vault.withdrawalQueue: strategy[]
+# vault.activeStrategies: strategy[]
+# vault.trustedStrategies: strategy[]
+# vault.isInitialized: number
+# vault.totalSupply: number
+# vault.underlyingIsWETH: bool
+# vault.targetFloatPercent: number
+# vault.feePercent: number
+
+# vault.lastHarvestBlockNum: number
+# vault.harvestDelay: number
+# vault.harvestWindow: number
+# vault.lastHarvestWindowStart: number
+# vault.nextHarvestDelay: number
+
