@@ -67,6 +67,8 @@ templates:
         # Strategies
         - event: StrategyTrusted(indexed address,indexed address)
           handler: handleStrategyTrusted
+        - event: StrategyDistrusted(indexed address,indexed address)
+          handler: handleStrategyDistrusted
   - name: Strategy
     kind: ethereum/contract
     network: kovan
@@ -85,7 +87,6 @@ templates:
           file: ./abis/Vault.json
         - name: Strategy
           file: ./abis/Strategy.json
-
 # - Approval(indexed address,indexed address,uint256)
 # - AuthorityUpdated(indexed address)
 # - Deposit(indexed address,uint256)
@@ -98,15 +99,15 @@ templates:
 # - Initialized(indexed address) ✅
 # - OwnerUpdated(indexed address)
 
-# - StrategyDe2posit(indexed address,indexed address,uint256)
-# - StrategyDistrusted(indexed address,indexed address)
-# - StrategySeized(indexed address,indexed address)
 # - StrategyTrusted(indexed address,indexed address) ✅
+# - StrategyDistrusted(indexed address,indexed address) ✅
+# - StrategyDeposit(indexed address,indexed address,uint256)
+# - StrategySeized(indexed address,indexed address)
 # - StrategyWithdrawal(indexed address,indexed address,uint256)
 
 # - TargetFloatPercentUpdated(indexed address,uint256) ✅
 # - Transfer(indexed address,indexed address,uint256)
-# - UnderlyingIsWETHUpdated(indexed address,bool)
+# - UnderlyingIsWETHUpdated(indexed address,bool) ✅
 # - Withdraw(indexed address,uint256)
 # - WithdrawalQueueIndexReplaced(indexed address,uint256,indexed address,indexed address)
 # - WithdrawalQueueIndexReplacedWithTip(indexed address,uint256,indexed address,indexed address)

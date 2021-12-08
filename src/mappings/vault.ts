@@ -5,15 +5,14 @@ import {
   HarvestDelayUpdateScheduled,
   HarvestWindowUpdated,
   Initialized,
+  StrategyDistrusted,
   StrategyTrusted,
   TargetFloatPercentUpdated,
   UnderlyingIsWETHUpdated,
 } from "../../generated/VaultFactory/Vault";
-import {
-  Vault as VaultSchema,
-} from "../../generated/schema";
+import { Vault as VaultSchema } from "../../generated/schema";
 import { log } from "@graphprotocol/graph-ts";
-import { getOrCreateStrategy } from "../utils";
+import { getOrCreateStrategy } from "../utils/strategyUtils";
 
 // Updates vault.initialized
 export function handleVaultInitialized(event: Initialized): void {
@@ -137,6 +136,7 @@ export function handleFeePercentUpdated(event: FeePercentUpdated): void {
 // Strategy Management  //
 // // // // // // // // //
 
+// handleStrategyTrusted
 // Will create a new strategy entity if this strategy has not been trusted before
 export function handleStrategyTrusted(event: StrategyTrusted): void {
   let vaultId = event.address;
@@ -144,6 +144,7 @@ export function handleStrategyTrusted(event: StrategyTrusted): void {
 
   let vault = VaultSchema.load(vaultId.toHexString());
 
+  // Add to the array
   vault.trustedStrategies = vault.trustedStrategies.concat([
     trustedStrategy.toHexString(),
   ]);
@@ -154,6 +155,39 @@ export function handleStrategyTrusted(event: StrategyTrusted): void {
   strategy.trusted = true;
 
   log.info("📈🤝 StrategyTrusted, Vault {}, Strategy: {} - {}", [
+    vaultId.toHexString(),
+    strategy.name,
+    strategy.id,
+  ]);
+
+  strategy.save();
+}
+
+// handleStrategyDistrusted
+// Will remove strategy from `vault.trustedStrategies` and turn off `strategy.trusted`
+export function handleStrategyDistrusted(event: StrategyDistrusted): void {
+  let vaultId = event.address;
+  let distrustedStrategy = event.params.strategy;
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  // Remove from the array
+  let strategyIndex = vault.trustedStrategies.indexOf(
+    distrustedStrategy.toString()
+  );
+
+  let trustedStrategies = vault.trustedStrategies;
+
+  if (strategyIndex > -1) {
+    trustedStrategies.splice(strategyIndex, 1);
+    vault.trustedStrategies = trustedStrategies;
+    vault.save();
+  }
+
+  let strategy = getOrCreateStrategy(distrustedStrategy, vaultId);
+  strategy.trusted = false;
+
+  log.info("📈💔 StrategyDistrusted, Vault {}, Strategy: {} - {}", [
     vaultId.toHexString(),
     strategy.name,
     strategy.id,

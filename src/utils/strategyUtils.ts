@@ -1,6 +1,6 @@
 import { Address, log } from "@graphprotocol/graph-ts";
-import { Strategy as StrategySchema } from "../generated/schema";
-import { Strategy as StrategyTemplate } from "../generated/templates/Vault/Strategy";
+import { Strategy as StrategySchema } from "../../generated/schema";
+import { Strategy as StrategyTemplate } from "../../generated/templates/Vault/Strategy";
 
 // Retrieves or creates a strategy by its strategyAddress
 export const getOrCreateStrategy = (

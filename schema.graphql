@@ -61,9 +61,6 @@ type Strategy @entity {
   name: String!
   vault: Vault!
 
-  # Underlying
-
-  #Harvest data
 }
 
 # strategy.trusted 🚧
