@@ -60,10 +60,10 @@ type Vault @entity {
 ## Holdings/Float/Supply - call them via contracts and update
 
 # vault.totalStrategyHoldings: number // view : gets updated on  StrategyDeposit ✅, StrategyWithdraw ✅,  SeizeStrategy ✅ and Harvest ✅
-# vault.totalSupply: number // view : gets updated on  Deposit, Withdraw, and Harvest ✅ (TODO: consider deriving this from Transfer)
+# vault.totalSupply: number // view : gets updated on  Deposit  ✅ , Withdraw  ✅ , and Harvest ✅ (TODO: consider deriving this from Transfer)
 # vault.maxLockedProfit: number // view: gets changed every Harvest ✅
 
-## Update these all the fuckin time - on StrategyDeposit ✅, StrategyWithdraw ✅, SeizeStrategy ✅ and Harvest ✅, Deposit, Withdraw,
+## Update these all the fuckin time - on StrategyDeposit ✅, StrategyWithdraw ✅, SeizeStrategy ✅ and Harvest ✅, Deposit ✅ , Withdraw ✅ ,
 # vault.lockedProfit: number // view: ✅
 # vault.exchangeRate: number // view: ✅
 # vault.totalFloat: number // view: ✅

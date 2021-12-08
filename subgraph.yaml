@@ -75,6 +75,11 @@ templates:
           handler: handleStrategyWithdrawal
         - event: StrategySeized(indexed address,indexed address)
           handler: handleStrategySeized
+        # Deposit/Withdraw
+        - event: Deposit(indexed address,uint256)
+          handler: handleDeposit
+        - event: Withdraw(indexed address,uint256)
+          handler: handleWithdraw
   - name: Strategy
     kind: ethereum/contract
     network: kovan
@@ -93,6 +98,7 @@ templates:
           file: ./abis/Vault.json
         - name: Strategy
           file: ./abis/Strategy.json
+# Vault Events
 # - Approval(indexed address,indexed address,uint256)
 # - AuthorityUpdated(indexed address)
 # - Deposit(indexed address,uint256)
@@ -103,13 +109,13 @@ templates:
 # - HarvestDelayUpdated(indexed address,uint64) ✅
 # - HarvestWindowUpdated(indexed address,uint128) ✅
 # - Initialized(indexed address) ✅
-# - OwnerUpdated(indexed address) 
+# - OwnerUpdated(indexed address)
 
 # - StrategyTrusted(indexed address,indexed address) ✅
 # - StrategyDistrusted(indexed address,indexed address) ✅
-# - StrategyDeposit(indexed address,indexed address,uint256) 🚧 ? just need to update balance? no - 
-# - StrategySeized(indexed address,indexed address) 🚧 ? just need to update balance? no - 
-# - StrategyWithdrawal(indexed address,indexed address,uint256) 🚧 ? just need to update balance? no - 
+# - StrategyDeposit(indexed address,indexed address,uint256) ✅
+# - StrategySeized(indexed address,indexed address) ✅
+# - StrategyWithdrawal(indexed address,indexed address,uint256) ✅
 
 # - TargetFloatPercentUpdated(indexed address,uint256) ✅
 # - UnderlyingIsWETHUpdated(indexed address,bool) ✅

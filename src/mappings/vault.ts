@@ -1,4 +1,12 @@
+import { Vault as VaultSchema } from "../../generated/schema";
+import { log } from "@graphprotocol/graph-ts";
 import {
+  getOrCreateStrategy,
+  updateStrategyBalance,
+  updateStrategyBalances,
+} from "../utils/strategyUtils";
+import {
+  Vault as VaultTemplate,
   FeePercentUpdated,
   Harvest,
   HarvestDelayUpdated,
@@ -12,15 +20,9 @@ import {
   StrategyWithdrawal,
   TargetFloatPercentUpdated,
   UnderlyingIsWETHUpdated,
-} from "../../generated/VaultFactory/Vault";
-import { Vault as VaultSchema } from "../../generated/schema";
-import { log } from "@graphprotocol/graph-ts";
-import {
-  getOrCreateStrategy,
-  updateStrategyBalance,
-  updateStrategyBalances,
-} from "../utils/strategyUtils";
-import { Vault as VaultTemplate } from "../../generated/templates/Vault/Vault";
+  Deposit,
+  Withdraw,
+} from "../../generated/templates/Vault/Vault";
 
 /*///////////////////////////////////////////////////////////////
                     ATTRIBUTE HANDLERS
@@ -407,4 +409,106 @@ export function handleStrategySeized(event: StrategySeized): void {
   }
 
   vault.save();
+}
+
+/*///////////////////////////////////////////////////////////////
+                    DEPOSIT/WITHDRAW HANDLERS
+//////////////////////////////////////////////////////////////*/
+
+export function handleDeposit(event: Deposit): void {
+  let vaultId = event.address;
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  // # Contract Calls # //
+  let vaultInstance = VaultTemplate.bind(vaultId);
+
+  // vault.totalSupply
+  let tryTotalSupply = vaultInstance.try_totalSupply();
+  if (!tryTotalSupply.reverted) {
+    vault.totalSupply = tryTotalSupply.value;
+  }
+
+  // Updated everywhere
+
+  // vault.lockedProfit
+  let tryLockedProfit = vaultInstance.try_lockedProfit();
+  if (!tryLockedProfit.reverted) {
+    vault.lockedProfit = tryLockedProfit.value;
+  }
+
+  // vault.exchangeRate
+  let tryExchangeRate = vaultInstance.try_exchangeRate();
+  if (!tryExchangeRate.reverted) {
+    vault.exchangeRate = tryExchangeRate.value;
+  }
+
+  // vault.totalFloat
+  let tryTotalFloat = vaultInstance.try_totalFloat();
+  if (!tryTotalFloat.reverted) {
+    vault.totalFloat = tryTotalFloat.value;
+  }
+
+  // vault.totalHoldings
+  let tryTotalHoldings = vaultInstance.try_totalHoldings();
+  if (!tryTotalFloat.reverted) {
+    vault.totalHoldings = tryTotalHoldings.value;
+  }
+
+  vault.save();
+
+  log.info("🏦 ⬅️ Vault Deposit, Vault {}, Amount: {}, User: {}", [
+    vaultId.toHexString(),
+    event.params.underlyingAmount.toString(),
+    event.params.user.toHexString(),
+  ]);
+}
+
+export function handleWithdraw(event: Withdraw): void {
+  let vaultId = event.address;
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  // # Contract Calls # //
+  let vaultInstance = VaultTemplate.bind(vaultId);
+
+  // vault.totalSupply
+  let tryTotalSupply = vaultInstance.try_totalSupply();
+  if (!tryTotalSupply.reverted) {
+    vault.totalSupply = tryTotalSupply.value;
+  }
+
+  // Updated everywhere
+
+  // vault.lockedProfit
+  let tryLockedProfit = vaultInstance.try_lockedProfit();
+  if (!tryLockedProfit.reverted) {
+    vault.lockedProfit = tryLockedProfit.value;
+  }
+
+  // vault.exchangeRate
+  let tryExchangeRate = vaultInstance.try_exchangeRate();
+  if (!tryExchangeRate.reverted) {
+    vault.exchangeRate = tryExchangeRate.value;
+  }
+
+  // vault.totalFloat
+  let tryTotalFloat = vaultInstance.try_totalFloat();
+  if (!tryTotalFloat.reverted) {
+    vault.totalFloat = tryTotalFloat.value;
+  }
+
+  // vault.totalHoldings
+  let tryTotalHoldings = vaultInstance.try_totalHoldings();
+  if (!tryTotalFloat.reverted) {
+    vault.totalHoldings = tryTotalHoldings.value;
+  }
+
+  vault.save();
+
+  log.info("🏦➡️ Vault Withdraw, Vault {}, Amount: {}, User: {}", [
+    vaultId.toHexString(),
+    event.params.underlyingAmount.toString(),
+    event.params.user.toHexString(),
+  ]);
 }

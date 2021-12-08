@@ -4,6 +4,8 @@ import { Strategy as StrategyTemplate } from "../../generated/templates/Vault/St
 import { Vault as VaultTemplate } from "../../generated/templates/Vault/Vault";
 
 // Retrieves or creates a strategy by its strategyAddress
+// Called on: StrategyTrusted
+
 export function getOrCreateStrategy(
   strategyAddress: Address,
   vaultAddress: Address
