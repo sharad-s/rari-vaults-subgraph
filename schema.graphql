@@ -10,7 +10,7 @@ type Vault @entity {
   underlying: Bytes! # address
   underlyingSymbol: String!
   underlyingDecimals: Int!
-  underlyingIsWeth: Boolean
+  underlyingIsWeth: Boolean!
 
   #Harvest data
   lastHarvestTimestamp: BigInt
@@ -22,9 +22,25 @@ type Vault @entity {
   # Strategies
   trustedStrategies: [Strategy!]! # trusted
   # strategies: [Strategy!]! # (computed): trusted and has balance
+
+  # Holdings/Float/Supply
+  maxLockedProfit: BigInt
+  totalSupply: BigInt
+  totalStrategyHoldings: BigInt
+
+  lockedProfit: BigInt
+  exchangeRate: BigInt
+  totalFloat: BigInt
+  totalHoldings: BigInt
 }
 
-# /// Not important to rely on from subgraph - but will usually be synced
+### Important to derive and rely on from subgraph
+
+# vault.withdrawalQueue: strategy[]
+# vault.strategies: strategy[] // ?: trusted & balance >= 0
+# vault.trustedStrategies: strategy[] ✅
+
+### Not important to rely on from subgraph - but will usually be synced
 
 ## Public Attributes
 # vault.isInitialized: number ✅
@@ -36,32 +52,26 @@ type Vault @entity {
 # vault.lastHarvestTimestamp: number ✅
 # vault.harvestDelay: number ✅
 # vault.harvestWindow: number ✅
-# vault.lastHarvestWindowStartTimestamp: number //
+# vault.lastHarvestWindowStartTimestamp: number ✅
 # vault.nextHarvestDelay: number ✅
 
-# /// Not important to rely on from subgraph - realtime data can be read from contracts
+### Not important to rely on from subgraph - realtime data can be read from contracts
 
-## Holdings/Float/Supply - call them and update
+## Holdings/Float/Supply - call them via contracts and update
 
-# vault.totalStrategyHoldings: number // view : gets updated on  StrategyDeposit, StrategyWithdraw, SeizeStrategy and Harvest
-# vault.totalSupply: number // view : gets updated on  Deposit, Withdraw, and Harvest (consider deriving this from Transfer)
-# vault.maxLockedProfit: number // view: gets changed every Harvest
+# vault.totalStrategyHoldings: number // view : gets updated on  StrategyDeposit ✅, StrategyWithdraw ✅,  SeizeStrategy ✅ and Harvest ✅
+# vault.totalSupply: number // view : gets updated on  Deposit, Withdraw, and Harvest ✅ (TODO: consider deriving this from Transfer)
+# vault.maxLockedProfit: number // view: gets changed every Harvest ✅
 
-# Update these all the fuckin time - read from contracts
-# vault.lockedProfit: number // view:
-# vault.exchangeRate: number // view:
-# vault.totalFloat: number // view:
-# vault.totalHoldings: number
+## Update these all the fuckin time - on StrategyDeposit ✅, StrategyWithdraw ✅, SeizeStrategy ✅ and Harvest ✅, Deposit, Withdraw,
+# vault.lockedProfit: number // view: ✅
+# vault.exchangeRate: number // view: ✅
+# vault.totalFloat: number // view: ✅
+# vault.totalHoldings: number ✅
+  
+## Note: might implement totalFees (read on the vault contract itself
 
-# Note: might implement totalFees (read on the vault contract itself
-
-# /// Important to derive and rely on from subgraph
-
-# vault.withdrawalQueue: strategy[]
-# vault.strategies: strategy[] // ?: trusted & balance >= 0
-# vault.trustedStrategies: strategy[] ✅
-
-# /// Save for Later
+### Save for Later
 # vault.balanceOf{user} // don't implement rn
 # vault.balanceOfUnderlying{user} // don't implement rn
 

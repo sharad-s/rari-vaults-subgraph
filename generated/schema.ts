@@ -217,6 +217,125 @@ export class Vault extends Entity {
   set trustedStrategies(value: Array<string>) {
     this.set("trustedStrategies", Value.fromStringArray(value));
   }
+
+  get maxLockedProfit(): BigInt | null {
+    let value = this.get("maxLockedProfit");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set maxLockedProfit(value: BigInt | null) {
+    if (value === null) {
+      this.unset("maxLockedProfit");
+    } else {
+      this.set("maxLockedProfit", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get totalSupply(): BigInt | null {
+    let value = this.get("totalSupply");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalSupply(value: BigInt | null) {
+    if (value === null) {
+      this.unset("totalSupply");
+    } else {
+      this.set("totalSupply", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get totalStrategyHoldings(): BigInt | null {
+    let value = this.get("totalStrategyHoldings");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalStrategyHoldings(value: BigInt | null) {
+    if (value === null) {
+      this.unset("totalStrategyHoldings");
+    } else {
+      this.set("totalStrategyHoldings", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get lockedProfit(): BigInt | null {
+    let value = this.get("lockedProfit");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set lockedProfit(value: BigInt | null) {
+    if (value === null) {
+      this.unset("lockedProfit");
+    } else {
+      this.set("lockedProfit", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get exchangeRate(): BigInt | null {
+    let value = this.get("exchangeRate");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set exchangeRate(value: BigInt | null) {
+    if (value === null) {
+      this.unset("exchangeRate");
+    } else {
+      this.set("exchangeRate", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get totalFloat(): BigInt | null {
+    let value = this.get("totalFloat");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalFloat(value: BigInt | null) {
+    if (value === null) {
+      this.unset("totalFloat");
+    } else {
+      this.set("totalFloat", Value.fromBigInt(value as BigInt));
+    }
+  }
+
+  get totalHoldings(): BigInt | null {
+    let value = this.get("totalHoldings");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalHoldings(value: BigInt | null) {
+    if (value === null) {
+      this.unset("totalHoldings");
+    } else {
+      this.set("totalHoldings", Value.fromBigInt(value as BigInt));
+    }
+  }
 }
 
 export class Strategy extends Entity {

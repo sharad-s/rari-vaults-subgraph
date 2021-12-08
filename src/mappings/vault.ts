@@ -20,6 +20,7 @@ import {
   updateStrategyBalance,
   updateStrategyBalances,
 } from "../utils/strategyUtils";
+import { Vault as VaultTemplate } from "../../generated/templates/Vault/Vault";
 
 /*///////////////////////////////////////////////////////////////
                     ATTRIBUTE HANDLERS
@@ -108,6 +109,51 @@ export function handleHarvest(event: Harvest): void {
 
   // Set lastHarvestTimestamp on every Harvest
   vault.lastHarvestTimestamp = event.block.timestamp;
+
+  // # Contract calls # //
+  let vaultInstance = VaultTemplate.bind(vaultId);
+
+  // vault.maxLockedProfit
+  let tryMaxLockedProfit = vaultInstance.try_maxLockedProfit();
+  if (!tryMaxLockedProfit.reverted) {
+    vault.maxLockedProfit = tryMaxLockedProfit.value;
+  }
+
+  // vault.totalSupply
+  let tryTotalSupply = vaultInstance.try_totalSupply();
+  if (!tryTotalSupply.reverted) {
+    vault.totalSupply = tryTotalSupply.value;
+  }
+
+  // vault.totalStrategyHoldings
+  let tryTotalStrategyHoldings = vaultInstance.try_totalStrategyHoldings();
+  if (!tryTotalStrategyHoldings.reverted) {
+    vault.totalStrategyHoldings = tryTotalStrategyHoldings.value;
+  }
+
+  // vault.lockedProfit
+  let tryLockedProfit = vaultInstance.try_lockedProfit();
+  if (!tryLockedProfit.reverted) {
+    vault.lockedProfit = tryLockedProfit.value;
+  }
+
+  // vault.exchangeRate
+  let tryExchangeRate = vaultInstance.try_exchangeRate();
+  if (!tryExchangeRate.reverted) {
+    vault.exchangeRate = tryExchangeRate.value;
+  }
+
+  // vault.totalFloat
+  let tryTotalFloat = vaultInstance.try_totalFloat();
+  if (!tryTotalFloat.reverted) {
+    vault.totalFloat = tryTotalFloat.value;
+  }
+
+  // vault.totalHoldings
+  let tryTotalHoldings = vaultInstance.try_totalHoldings();
+  if (!tryTotalFloat.reverted) {
+    vault.totalHoldings = tryTotalHoldings.value;
+  }
 
   vault.save();
 
@@ -232,16 +278,133 @@ export function handleStrategyDeposit(event: StrategyDeposit): void {
   let vaultId = event.address;
   let strategy = event.params.strategy;
   updateStrategyBalance(strategy, vaultId);
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  // # Contract Calls # //
+  let vaultInstance = VaultTemplate.bind(vaultId);
+
+  // vault.totalStrategyHoldings
+  let tryTotalStrategyHoldings = vaultInstance.try_totalStrategyHoldings();
+  if (!tryTotalStrategyHoldings.reverted) {
+    vault.totalStrategyHoldings = tryTotalStrategyHoldings.value;
+  }
+
+  // Updated everywhere
+
+  // vault.lockedProfit
+  let tryLockedProfit = vaultInstance.try_lockedProfit();
+  if (!tryLockedProfit.reverted) {
+    vault.lockedProfit = tryLockedProfit.value;
+  }
+
+  // vault.exchangeRate
+  let tryExchangeRate = vaultInstance.try_exchangeRate();
+  if (!tryExchangeRate.reverted) {
+    vault.exchangeRate = tryExchangeRate.value;
+  }
+
+  // vault.totalFloat
+  let tryTotalFloat = vaultInstance.try_totalFloat();
+  if (!tryTotalFloat.reverted) {
+    vault.totalFloat = tryTotalFloat.value;
+  }
+
+  // vault.totalHoldings
+  let tryTotalHoldings = vaultInstance.try_totalHoldings();
+  if (!tryTotalFloat.reverted) {
+    vault.totalHoldings = tryTotalHoldings.value;
+  }
+
+  vault.save();
 }
 
 export function handleStrategyWithdrawal(event: StrategyWithdrawal): void {
   let vaultId = event.address;
   let strategy = event.params.strategy;
   updateStrategyBalance(strategy, vaultId);
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  // # Contract Calls # //
+  let vaultInstance = VaultTemplate.bind(vaultId);
+
+  // vault.totalStrategyHoldings
+  let tryTotalStrategyHoldings = vaultInstance.try_totalStrategyHoldings();
+  if (!tryTotalStrategyHoldings.reverted) {
+    vault.totalStrategyHoldings = tryTotalStrategyHoldings.value;
+  }
+
+  // Updated everywhere
+
+  // vault.lockedProfit
+  let tryLockedProfit = vaultInstance.try_lockedProfit();
+  if (!tryLockedProfit.reverted) {
+    vault.lockedProfit = tryLockedProfit.value;
+  }
+
+  // vault.exchangeRate
+  let tryExchangeRate = vaultInstance.try_exchangeRate();
+  if (!tryExchangeRate.reverted) {
+    vault.exchangeRate = tryExchangeRate.value;
+  }
+
+  // vault.totalFloat
+  let tryTotalFloat = vaultInstance.try_totalFloat();
+  if (!tryTotalFloat.reverted) {
+    vault.totalFloat = tryTotalFloat.value;
+  }
+
+  // vault.totalHoldings
+  let tryTotalHoldings = vaultInstance.try_totalHoldings();
+  if (!tryTotalFloat.reverted) {
+    vault.totalHoldings = tryTotalHoldings.value;
+  }
+
+  vault.save();
 }
 
 export function handleStrategySeized(event: StrategySeized): void {
   let vaultId = event.address;
   let strategy = event.params.strategy;
   updateStrategyBalance(strategy, vaultId);
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  // # Contract Calls # //
+  let vaultInstance = VaultTemplate.bind(vaultId);
+
+  // vault.totalStrategyHoldings
+  let tryTotalStrategyHoldings = vaultInstance.try_totalStrategyHoldings();
+  if (!tryTotalStrategyHoldings.reverted) {
+    vault.totalStrategyHoldings = tryTotalStrategyHoldings.value;
+  }
+
+  // Updated everywhere
+
+  // vault.lockedProfit
+  let tryLockedProfit = vaultInstance.try_lockedProfit();
+  if (!tryLockedProfit.reverted) {
+    vault.lockedProfit = tryLockedProfit.value;
+  }
+
+  // vault.exchangeRate
+  let tryExchangeRate = vaultInstance.try_exchangeRate();
+  if (!tryExchangeRate.reverted) {
+    vault.exchangeRate = tryExchangeRate.value;
+  }
+
+  // vault.totalFloat
+  let tryTotalFloat = vaultInstance.try_totalFloat();
+  if (!tryTotalFloat.reverted) {
+    vault.totalFloat = tryTotalFloat.value;
+  }
+
+  // vault.totalHoldings
+  let tryTotalHoldings = vaultInstance.try_totalHoldings();
+  if (!tryTotalFloat.reverted) {
+    vault.totalHoldings = tryTotalHoldings.value;
+  }
+
+  vault.save();
 }

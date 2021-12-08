@@ -22,7 +22,8 @@ export function handleVaultDeployed(event: VaultDeployed): void {
   vault.initialized = false;
   vault.underlyingSymbol = erc20.symbol();
   vault.underlyingDecimals = erc20.decimals();
-
+  vault.underlyingIsWeth = false;
+  
   // Strategies
   vault.trustedStrategies = [];
 

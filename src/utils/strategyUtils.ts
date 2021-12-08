@@ -54,6 +54,8 @@ export function updateStrategyBalance(
   // Vault Contract instance
   let vaultInstance = VaultTemplate.bind(vaultAddress);
 
+  // # Contract calls # //
+
   // Try reading the balance, update if successful
   let tryStrategyData = vaultInstance.try_getStrategyData(strategyAddress);
 
@@ -62,17 +64,20 @@ export function updateStrategyBalance(
     let strategySchema = StrategySchema.load(strategyAddress.toHexString());
 
     let balance = tryStrategyData.value.value1;
-    strategySchema.balance = balance;
-    strategySchema.save();
 
-    log.info(
-      "📈✅ Updated Strategy Balance, Vault {}, Strategy: {} , Balance: {}",
-      [
-        vaultAddress.toHexString(),
-        strategyAddress.toHexString(),
-        balance.toString(),
-      ]
-    );
+    // Update balance only if changed
+    if (strategySchema.balance !== balance) {
+      strategySchema.balance = balance;
+      strategySchema.save();
+      log.info(
+        "📈✅ Updated Strategy Balance, Vault {}, Strategy: {} , Balance: {}",
+        [
+          vaultAddress.toHexString(),
+          strategyAddress.toHexString(),
+          balance.toString(),
+        ]
+      );
+    }
 
     return balance;
   } else return null;
@@ -91,6 +96,8 @@ export function updateStrategyBalances(
   for (let i = 0; i < strategyAddresses.length; i++) {
     let strategyAddress = strategyAddresses[i];
 
+    // # Contract calls # //
+
     // Try reading the balance from vault, update if successful
     let tryStrategyData = vaultInstance.try_getStrategyData(strategyAddress);
 
@@ -99,17 +106,20 @@ export function updateStrategyBalances(
       let strategySchema = StrategySchema.load(strategyAddress.toHexString());
 
       let balance = tryStrategyData.value.value1;
-      strategySchema.balance = balance;
-      strategySchema.save();
 
-      log.info(
-        "📈✅[] Updated Strategy Balance during Harvest, Vault {}, Strategy: {} , Balance: {}",
-        [
-          vaultAddress.toHexString(),
-          strategyAddress.toHexString(),
-          balance.toString(),
-        ]
-      );
+      // Update if balance has changed
+      if (strategySchema.balance !== balance) {
+        strategySchema.balance = balance;
+        strategySchema.save();
+        log.info(
+          "📈✅🍠 Updated Strategy Balance during Harvest, Vault {}, Strategy: {} , Balance: {}",
+          [
+            vaultAddress.toHexString(),
+            strategyAddress.toHexString(),
+            balance.toString(),
+          ]
+        );
+      }
     }
   }
 }
