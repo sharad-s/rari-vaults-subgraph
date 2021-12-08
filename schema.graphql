@@ -17,8 +17,10 @@ type Vault @entity {
   harvestWindow: BigInt
   harvestDelay: BigInt
   nextHarvestDelay: BigInt
-  # lastHarvestWindowStartBlock:  
+  # lastHarvestWindowStartBlock:
 
+  # Strategies
+  trustedStrategies: [Strategy!]!
 }
 
 ## Public Attributes
@@ -41,14 +43,31 @@ type Vault @entity {
 # vault.totalSupply: number
 
 # vault.maxLockedProfit: number
-# vault.lockedProfit: number // view: gets updated as much as possible? 
-# vault.exchangeRate: number // view: gets updated as much as possible? 
+# vault.lockedProfit: number // view: gets updated as much as possible?
+# vault.exchangeRate: number // view: gets updated as much as possible?
 
 # vault.balanceOf{user} // don't implement
 # vault.balanceOfUnderlying{user} // don't implement
 
 # vault.withdrawalQueue: strategy[]
 # vault.activeStrategies: strategy[]
-# vault.trustedStrategies: strategy[]
+# vault.trustedStrategies: strategy[] ✅
 
+type Strategy @entity {
+  id: ID!
 
+  # Public Attributes
+  trusted: Boolean!
+  name: String!
+  vault: Vault!
+
+  # Underlying
+
+  #Harvest data
+}
+
+# strategy.trusted 🚧
+# strategy.balance
+# strategy.name  ✅
+# strategy.queueIndex (-1 or something if not in)
+# strategy.vault (0x0 or something if no vault associated)✅

@@ -5,11 +5,15 @@ import {
   HarvestDelayUpdateScheduled,
   HarvestWindowUpdated,
   Initialized,
+  StrategyTrusted,
   TargetFloatPercentUpdated,
   UnderlyingIsWETHUpdated,
 } from "../../generated/VaultFactory/Vault";
-import { Vault as VaultSchema } from "../../generated/schema";
+import {
+  Vault as VaultSchema,
+} from "../../generated/schema";
 import { log } from "@graphprotocol/graph-ts";
+import { getOrCreateStrategy } from "../utils";
 
 // Updates vault.initialized
 export function handleVaultInitialized(event: Initialized): void {
@@ -128,4 +132,32 @@ export function handleFeePercentUpdated(event: FeePercentUpdated): void {
   let vault = VaultSchema.load(vaultId.toHexString());
   vault.feePercent = newFeePercent;
   vault.save();
+}
+// // // // // // // // //
+// Strategy Management  //
+// // // // // // // // //
+
+// Will create a new strategy entity if this strategy has not been trusted before
+export function handleStrategyTrusted(event: StrategyTrusted): void {
+  let vaultId = event.address;
+  let trustedStrategy = event.params.strategy;
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  vault.trustedStrategies = vault.trustedStrategies.concat([
+    trustedStrategy.toHexString(),
+  ]);
+
+  vault.save();
+
+  let strategy = getOrCreateStrategy(trustedStrategy, vaultId);
+  strategy.trusted = true;
+
+  log.info("📈🤝 StrategyTrusted, Vault {}, Strategy: {} - {}", [
+    vaultId.toHexString(),
+    strategy.name,
+    strategy.id,
+  ]);
+
+  strategy.save();
 }

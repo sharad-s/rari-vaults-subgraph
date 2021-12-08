@@ -23,6 +23,9 @@ export function handleVaultDeployed(event: VaultDeployed): void {
   vault.underlyingSymbol = erc20.symbol();
   vault.underlyingDecimals = erc20.decimals();
 
+  // Strategies
+  vault.trustedStrategies = [];
+
   // Start listening for events on this newly created Vault using its template
   VaultTemplate.create(vaultId);
 
