@@ -32,11 +32,14 @@ type Vault @entity {
   exchangeRate: BigInt
   totalFloat: BigInt
   totalHoldings: BigInt
+
+  # Withdrawal Queue
+  withdrawalQueue: [Strategy!]! 
 }
 
 ### Important to derive and rely on from subgraph
 
-# vault.withdrawalQueue: strategy[]
+# vault.withdrawalQueue: strategy[] 🚧
 # vault.strategies: strategy[] // ?: trusted & balance >= 0
 # vault.trustedStrategies: strategy[] ✅
 

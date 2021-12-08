@@ -22,6 +22,11 @@ import {
   UnderlyingIsWETHUpdated,
   Deposit,
   Withdraw,
+  WithdrawalQueueSet,
+  WithdrawalQueuePushed,
+  WithdrawalQueuePopped,
+  WithdrawalQueueIndexReplaced,
+  WithdrawalQueueIndexesSwapped,
 } from "../../generated/templates/Vault/Vault";
 
 /*///////////////////////////////////////////////////////////////
@@ -511,4 +516,87 @@ export function handleWithdraw(event: Withdraw): void {
     event.params.underlyingAmount.toString(),
     event.params.user.toHexString(),
   ]);
+}
+
+/*///////////////////////////////////////////////////////////////
+                    WITHDRAWAL QUEUE LOGIC
+//////////////////////////////////////////////////////////////*/
+
+export function handleWithdrawalQueueSet(event: WithdrawalQueueSet): void {
+  let vaultId = event.address;
+  let withdrawalQueue = event.params.replacedWithdrawalQueue;
+
+  // const context = new DataSourceContext();
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  let newWithdrawalQueue: string[] = [];
+  for (let i = 0; i < withdrawalQueue.length; i++) {
+    newWithdrawalQueue.push(withdrawalQueue[i].toHexString());
+  }
+
+  vault.withdrawalQueue = newWithdrawalQueue;
+  vault.save();
+}
+
+export function handleWithdrawalQueuePush(event: WithdrawalQueuePushed): void {
+  let vaultId = event.address;
+  let strategy = event.params.pushedStrategy;
+
+  // const context = new DataSourceContext();
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  let newWithdrawalQueue: string[] = vault.withdrawalQueue;
+  newWithdrawalQueue.push(strategy.toHexString());
+
+  vault.withdrawalQueue = newWithdrawalQueue;
+  vault.save();
+}
+
+export function handleWithdrawalQueuePop(event: WithdrawalQueuePopped): void {
+  let vaultId = event.address;
+
+  // const context = new DataSourceContext();
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  let newWithdrawalQueue: string[] = vault.withdrawalQueue;
+  newWithdrawalQueue.pop();
+
+  vault.withdrawalQueue = newWithdrawalQueue;
+  vault.save();
+}
+
+export function handleWithdrawalQueueIndexReplaced(
+  event: WithdrawalQueueIndexReplaced
+): void {
+  let vaultId = event.address;
+
+  let replacementStrategy = event.params.replacementStrategy;
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  let newWithdrawalQueue: string[] = vault.withdrawalQueue;
+  newWithdrawalQueue[
+    event.params.index.toI32()
+  ] = replacementStrategy.toHexString();
+
+  vault.withdrawalQueue = newWithdrawalQueue;
+  vault.save();
+}
+
+export function handleWithdrawalIndexesSwapped(
+  event: WithdrawalQueueIndexesSwapped
+): void {
+  let vaultId = event.address;
+  let strategy1 = event.params.newStrategy1;
+  let strategy2 = event.params.newStrategy2;
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  let newWithdrawalQueue: string[] = vault.withdrawalQueue;
+
+  newWithdrawalQueue[event.params.index1.toI32()] = strategy2.toHexString();
+  newWithdrawalQueue[event.params.index2.toI32()] = strategy1.toHexString();
+
+  vault.withdrawalQueue = newWithdrawalQueue;
+  vault.save();
 }

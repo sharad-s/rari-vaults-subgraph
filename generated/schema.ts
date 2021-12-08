@@ -336,6 +336,15 @@ export class Vault extends Entity {
       this.set("totalHoldings", Value.fromBigInt(value as BigInt));
     }
   }
+
+  get withdrawalQueue(): Array<string> {
+    let value = this.get("withdrawalQueue");
+    return value.toStringArray();
+  }
+
+  set withdrawalQueue(value: Array<string>) {
+    this.set("withdrawalQueue", Value.fromStringArray(value));
+  }
 }
 
 export class Strategy extends Entity {

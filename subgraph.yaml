@@ -80,6 +80,18 @@ templates:
           handler: handleDeposit
         - event: Withdraw(indexed address,uint256)
           handler: handleWithdraw
+        # Withdrawal Queue
+        - event: WithdrawalQueueSet(indexed address,address[])
+          handler: handleWithdrawalQueueSet
+        - event: WithdrawalQueuePushed(indexed address,indexed address)
+          handler: handleWithdrawalQueuePush
+        - event: WithdrawalQueuePopped(indexed address,indexed address)
+          handler: handleWithdrawalQueuePop
+        - event: WithdrawalQueueIndexReplaced(indexed address,uint256,indexed address,indexed address)
+          handler: handleWithdrawalQueueIndexReplaced
+        - event: WithdrawalQueueIndexesSwapped(indexed address,uint256,uint256,indexed address,indexed address)
+          handler: handleWithdrawalIndexesSwapped
+
   - name: Strategy
     kind: ethereum/contract
     network: kovan
@@ -101,7 +113,7 @@ templates:
 # Vault Events
 # - Approval(indexed address,indexed address,uint256)
 # - AuthorityUpdated(indexed address)
-# - Deposit(indexed address,uint256)
+# - Deposit(indexed address,uint256) 🚧
 # - FeePercentUpdated(indexed address,uint256) ✅
 # - FeesClaimed(indexed address,uint256)
 # - Harvest(indexed address,address[]) 🚧
@@ -120,11 +132,11 @@ templates:
 # - TargetFloatPercentUpdated(indexed address,uint256) ✅
 # - UnderlyingIsWETHUpdated(indexed address,bool) ✅
 # - Transfer(indexed address,indexed address,uint256)
-# - Withdraw(indexed address,uint256)
+# - Withdraw(indexed address,uint256) 🚧
 
-# - WithdrawalQueueIndexReplaced(indexed address,uint256,indexed address,indexed address)
-# - WithdrawalQueueIndexReplacedWithTip(indexed address,uint256,indexed address,indexed address)
-# - WithdrawalQueueIndexesSwapped(indexed address,uint256,uint256,indexed address,indexed address)
-# - WithdrawalQueuePopped(indexed address,indexed address)
-# - WithdrawalQueuePushed(indexed address,indexed address)
-# - WithdrawalQueueSet(indexed address,address[])
+# - WithdrawalQueueIndexReplaced(indexed address,uint256,indexed address,indexed address)✅
+# - WithdrawalQueueIndexReplacedWithTip(indexed address,uint256,indexed address,indexed address) 🚧
+# - WithdrawalQueueIndexesSwapped(indexed address,uint256,uint256,indexed address,indexed address) ✅
+# - WithdrawalQueuePopped(indexed address,indexed address)✅
+# - WithdrawalQueuePushed(indexed address,indexed address)✅
+# - WithdrawalQueueSet(indexed address,address[])  ✅

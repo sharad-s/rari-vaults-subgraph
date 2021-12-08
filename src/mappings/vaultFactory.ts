@@ -27,6 +27,10 @@ export function handleVaultDeployed(event: VaultDeployed): void {
   // Strategies
   vault.trustedStrategies = [];
 
+  // Withdrawal Queue
+  vault.withdrawalQueue = [];
+
+
   // Start listening for events on this newly created Vault using its template
   VaultTemplate.create(vaultId);
 
