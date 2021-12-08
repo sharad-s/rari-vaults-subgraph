@@ -69,6 +69,12 @@ templates:
           handler: handleStrategyTrusted
         - event: StrategyDistrusted(indexed address,indexed address)
           handler: handleStrategyDistrusted
+        - event: StrategyDeposit(indexed address,indexed address,uint256)
+          handler: handleStrategyDeposit
+        - event: StrategyWithdrawal(indexed address,indexed address,uint256)
+          handler: handleStrategyWithdrawal
+        - event: StrategySeized(indexed address,indexed address)
+          handler: handleStrategySeized
   - name: Strategy
     kind: ethereum/contract
     network: kovan
@@ -97,18 +103,19 @@ templates:
 # - HarvestDelayUpdated(indexed address,uint64) ✅
 # - HarvestWindowUpdated(indexed address,uint128) ✅
 # - Initialized(indexed address) ✅
-# - OwnerUpdated(indexed address)
+# - OwnerUpdated(indexed address) 
 
 # - StrategyTrusted(indexed address,indexed address) ✅
 # - StrategyDistrusted(indexed address,indexed address) ✅
-# - StrategyDeposit(indexed address,indexed address,uint256)
-# - StrategySeized(indexed address,indexed address)
-# - StrategyWithdrawal(indexed address,indexed address,uint256)
+# - StrategyDeposit(indexed address,indexed address,uint256) 🚧 ? just need to update balance? no - 
+# - StrategySeized(indexed address,indexed address) 🚧 ? just need to update balance? no - 
+# - StrategyWithdrawal(indexed address,indexed address,uint256) 🚧 ? just need to update balance? no - 
 
 # - TargetFloatPercentUpdated(indexed address,uint256) ✅
-# - Transfer(indexed address,indexed address,uint256)
 # - UnderlyingIsWETHUpdated(indexed address,bool) ✅
+# - Transfer(indexed address,indexed address,uint256)
 # - Withdraw(indexed address,uint256)
+
 # - WithdrawalQueueIndexReplaced(indexed address,uint256,indexed address,indexed address)
 # - WithdrawalQueueIndexReplacedWithTip(indexed address,uint256,indexed address,indexed address)
 # - WithdrawalQueueIndexesSwapped(indexed address,uint256,uint256,indexed address,indexed address)

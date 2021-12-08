@@ -5,14 +5,25 @@ import {
   HarvestDelayUpdateScheduled,
   HarvestWindowUpdated,
   Initialized,
+  StrategyDeposit,
   StrategyDistrusted,
+  StrategySeized,
   StrategyTrusted,
+  StrategyWithdrawal,
   TargetFloatPercentUpdated,
   UnderlyingIsWETHUpdated,
 } from "../../generated/VaultFactory/Vault";
 import { Vault as VaultSchema } from "../../generated/schema";
 import { log } from "@graphprotocol/graph-ts";
-import { getOrCreateStrategy } from "../utils/strategyUtils";
+import {
+  getOrCreateStrategy,
+  updateStrategyBalance,
+  updateStrategyBalances,
+} from "../utils/strategyUtils";
+
+/*///////////////////////////////////////////////////////////////
+                    ATTRIBUTE HANDLERS
+//////////////////////////////////////////////////////////////*/
 
 // Updates vault.initialized
 export function handleVaultInitialized(event: Initialized): void {
@@ -24,63 +35,6 @@ export function handleVaultInitialized(event: Initialized): void {
   let vault = VaultSchema.load(vaultId.toHexString());
 
   vault.initialized = true;
-  vault.save();
-}
-
-export function handleHarvest(event: Harvest): void {
-  let vaultId = event.address;
-
-  log.info("💸 Vault Harvest for vault: {}", [vaultId.toHexString()]);
-
-  let vault = VaultSchema.load(vaultId.toHexString());
-  vault.lastHarvestBlock = event.block.timestamp;
-  vault.save();
-}
-
-// Updates vault.harvestWindow
-export function handleHarvestWindowUpdated(event: HarvestWindowUpdated): void {
-  let vaultId = event.address;
-  let newHarvestWindow = event.params.newHarvestWindow;
-
-  log.info("⏱ Harvest Window updated for vault: {}, New Window: {}", [
-    vaultId.toHexString(),
-    newHarvestWindow.toString(),
-  ]);
-
-  let vault = VaultSchema.load(vaultId.toHexString());
-  vault.harvestWindow = newHarvestWindow;
-  vault.save();
-}
-
-// Updates vault.harvestDelay
-export function handleHarvestDelayUpdated(event: HarvestDelayUpdated): void {
-  let vaultId = event.address;
-  let newHarvestDelay = event.params.newHarvestDelay;
-
-  log.info("⌛️ Harvest Delay Updated for vault: {}, New Delay: {}", [
-    vaultId.toHexString(),
-    newHarvestDelay.toString(),
-  ]);
-
-  let vault = VaultSchema.load(vaultId.toHexString());
-  vault.harvestDelay = newHarvestDelay;
-  vault.save();
-}
-
-// Updates vault.nextHarvestDelay
-export function handleHarvestDelayUpdateScheduled(
-  event: HarvestDelayUpdateScheduled
-): void {
-  let vaultId = event.address;
-  let nextHarvestDelay = event.params.newHarvestDelay;
-
-  log.info("⏳ Harvest Delay Update Scheduled, Vault {}, Next Delay: {}", [
-    vaultId.toHexString(),
-    nextHarvestDelay.toString(),
-  ]);
-
-  let vault = VaultSchema.load(vaultId.toHexString());
-  vault.nextHarvestDelay = nextHarvestDelay;
   vault.save();
 }
 
@@ -132,9 +86,85 @@ export function handleFeePercentUpdated(event: FeePercentUpdated): void {
   vault.feePercent = newFeePercent;
   vault.save();
 }
-// // // // // // // // //
-// Strategy Management  //
-// // // // // // // // //
+
+/*///////////////////////////////////////////////////////////////
+                    HARVEST HANDLERS
+//////////////////////////////////////////////////////////////*/
+
+export function handleHarvest(event: Harvest): void {
+  let vaultId = event.address;
+
+  log.info("💸 Vault Harvest for vault: {}", [vaultId.toHexString()]);
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  // If this is the first harvest of the new harvest window, set this as the beginning of the latest harvestWindow
+  if (
+    event.block.timestamp >=
+    vault.lastHarvestTimestamp.plus(vault.harvestDelay!)
+  ) {
+    vault.lastHarvestWindowStartTimestamp = event.block.timestamp;
+  }
+
+  // Set lastHarvestTimestamp on every Harvest
+  vault.lastHarvestTimestamp = event.block.timestamp;
+
+  vault.save();
+
+  // Update strategy balances
+  updateStrategyBalances(event.params.strategies, vaultId);
+}
+
+// Updates vault.harvestWindow
+export function handleHarvestWindowUpdated(event: HarvestWindowUpdated): void {
+  let vaultId = event.address;
+  let newHarvestWindow = event.params.newHarvestWindow;
+
+  log.info("⏱ Harvest Window updated for vault: {}, New Window: {}", [
+    vaultId.toHexString(),
+    newHarvestWindow.toString(),
+  ]);
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+  vault.harvestWindow = newHarvestWindow;
+  vault.save();
+}
+
+// Updates vault.harvestDelay
+export function handleHarvestDelayUpdated(event: HarvestDelayUpdated): void {
+  let vaultId = event.address;
+  let newHarvestDelay = event.params.newHarvestDelay;
+
+  log.info("⌛️ Harvest Delay Updated for vault: {}, New Delay: {}", [
+    vaultId.toHexString(),
+    newHarvestDelay.toString(),
+  ]);
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+  vault.harvestDelay = newHarvestDelay;
+  vault.save();
+}
+
+// Updates vault.nextHarvestDelay
+export function handleHarvestDelayUpdateScheduled(
+  event: HarvestDelayUpdateScheduled
+): void {
+  let vaultId = event.address;
+  let nextHarvestDelay = event.params.newHarvestDelay;
+
+  log.info("⏳ Harvest Delay Update Scheduled, Vault {}, Next Delay: {}", [
+    vaultId.toHexString(),
+    nextHarvestDelay.toString(),
+  ]);
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+  vault.nextHarvestDelay = nextHarvestDelay;
+  vault.save();
+}
+
+/*///////////////////////////////////////////////////////////////
+                    STRATEGY HANDLERS
+//////////////////////////////////////////////////////////////*/
 
 // handleStrategyTrusted
 // Will create a new strategy entity if this strategy has not been trusted before
@@ -142,25 +172,28 @@ export function handleStrategyTrusted(event: StrategyTrusted): void {
   let vaultId = event.address;
   let trustedStrategy = event.params.strategy;
 
-  let vault = VaultSchema.load(vaultId.toHexString());
-
-  // Add to the array
-  vault.trustedStrategies = vault.trustedStrategies.concat([
-    trustedStrategy.toHexString(),
-  ]);
-
-  vault.save();
-
   let strategy = getOrCreateStrategy(trustedStrategy, vaultId);
-  strategy.trusted = true;
 
-  log.info("📈🤝 StrategyTrusted, Vault {}, Strategy: {} - {}", [
-    vaultId.toHexString(),
-    strategy.name,
-    strategy.id,
-  ]);
+  // Add to the trustedArray if it's not already there
+  if (strategy.trusted === false) {
+    let vault = VaultSchema.load(vaultId.toHexString());
 
-  strategy.save();
+    vault.trustedStrategies = vault.trustedStrategies.concat([
+      trustedStrategy.toHexString(),
+    ]);
+
+    vault.save();
+
+    strategy.trusted = true;
+
+    log.info("📈🤝 StrategyTrusted, Vault {}, Strategy: {} - {}", [
+      vaultId.toHexString(),
+      strategy.name,
+      strategy.id,
+    ]);
+
+    strategy.save();
+  }
 }
 
 // handleStrategyDistrusted
@@ -176,9 +209,8 @@ export function handleStrategyDistrusted(event: StrategyDistrusted): void {
     distrustedStrategy.toString()
   );
 
-  let trustedStrategies = vault.trustedStrategies;
-
-  if (strategyIndex > -1) {
+  if (strategyIndex != -1) {
+    let trustedStrategies = vault.trustedStrategies;
     trustedStrategies.splice(strategyIndex, 1);
     vault.trustedStrategies = trustedStrategies;
     vault.save();
@@ -194,4 +226,22 @@ export function handleStrategyDistrusted(event: StrategyDistrusted): void {
   ]);
 
   strategy.save();
+}
+
+export function handleStrategyDeposit(event: StrategyDeposit): void {
+  let vaultId = event.address;
+  let strategy = event.params.strategy;
+  updateStrategyBalance(strategy, vaultId);
+}
+
+export function handleStrategyWithdrawal(event: StrategyWithdrawal): void {
+  let vaultId = event.address;
+  let strategy = event.params.strategy;
+  updateStrategyBalance(strategy, vaultId);
+}
+
+export function handleStrategySeized(event: StrategySeized): void {
+  let vaultId = event.address;
+  let strategy = event.params.strategy;
+  updateStrategyBalance(strategy, vaultId);
 }

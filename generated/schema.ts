@@ -121,8 +121,8 @@ export class Vault extends Entity {
     this.set("underlyingIsWeth", Value.fromBoolean(value));
   }
 
-  get lastHarvestBlock(): BigInt | null {
-    let value = this.get("lastHarvestBlock");
+  get lastHarvestTimestamp(): BigInt | null {
+    let value = this.get("lastHarvestTimestamp");
     if (value === null || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -130,11 +130,11 @@ export class Vault extends Entity {
     }
   }
 
-  set lastHarvestBlock(value: BigInt | null) {
+  set lastHarvestTimestamp(value: BigInt | null) {
     if (value === null) {
-      this.unset("lastHarvestBlock");
+      this.unset("lastHarvestTimestamp");
     } else {
-      this.set("lastHarvestBlock", Value.fromBigInt(value as BigInt));
+      this.set("lastHarvestTimestamp", Value.fromBigInt(value as BigInt));
     }
   }
 
@@ -189,6 +189,26 @@ export class Vault extends Entity {
     }
   }
 
+  get lastHarvestWindowStartTimestamp(): BigInt | null {
+    let value = this.get("lastHarvestWindowStartTimestamp");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set lastHarvestWindowStartTimestamp(value: BigInt | null) {
+    if (value === null) {
+      this.unset("lastHarvestWindowStartTimestamp");
+    } else {
+      this.set(
+        "lastHarvestWindowStartTimestamp",
+        Value.fromBigInt(value as BigInt)
+      );
+    }
+  }
+
   get trustedStrategies(): Array<string> {
     let value = this.get("trustedStrategies");
     return value.toStringArray();
@@ -229,15 +249,6 @@ export class Strategy extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get trusted(): boolean {
-    let value = this.get("trusted");
-    return value.toBoolean();
-  }
-
-  set trusted(value: boolean) {
-    this.set("trusted", Value.fromBoolean(value));
-  }
-
   get name(): string {
     let value = this.get("name");
     return value.toString();
@@ -245,6 +256,33 @@ export class Strategy extends Entity {
 
   set name(value: string) {
     this.set("name", Value.fromString(value));
+  }
+
+  get symbol(): string {
+    let value = this.get("symbol");
+    return value.toString();
+  }
+
+  set symbol(value: string) {
+    this.set("symbol", Value.fromString(value));
+  }
+
+  get balance(): BigInt {
+    let value = this.get("balance");
+    return value.toBigInt();
+  }
+
+  set balance(value: BigInt) {
+    this.set("balance", Value.fromBigInt(value));
+  }
+
+  get trusted(): boolean {
+    let value = this.get("trusted");
+    return value.toBoolean();
+  }
+
+  set trusted(value: boolean) {
+    this.set("trusted", Value.fromBoolean(value));
   }
 
   get vault(): string {

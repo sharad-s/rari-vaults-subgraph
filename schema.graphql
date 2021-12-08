@@ -13,15 +13,18 @@ type Vault @entity {
   underlyingIsWeth: Boolean
 
   #Harvest data
-  lastHarvestBlock: BigInt
+  lastHarvestTimestamp: BigInt
   harvestWindow: BigInt
   harvestDelay: BigInt
   nextHarvestDelay: BigInt
-  # lastHarvestWindowStartBlock:
+  lastHarvestWindowStartTimestamp: BigInt
 
   # Strategies
-  trustedStrategies: [Strategy!]!
+  trustedStrategies: [Strategy!]! # trusted
+  # strategies: [Strategy!]! # (computed): trusted and has balance
 }
+
+# /// Not important to rely on from subgraph - but will usually be synced
 
 ## Public Attributes
 # vault.isInitialized: number ✅
@@ -30,41 +33,53 @@ type Vault @entity {
 # vault.feePercent: number ✅
 
 ## Harvest
-# vault.lastHarvestBlockNum: number ✅
+# vault.lastHarvestTimestamp: number ✅
 # vault.harvestDelay: number ✅
 # vault.harvestWindow: number ✅
-# vault.lastHarvestWindowStart: number
+# vault.lastHarvestWindowStartTimestamp: number //
 # vault.nextHarvestDelay: number ✅
 
-## Holdings/Float/Supply
+# /// Not important to rely on from subgraph - realtime data can be read from contracts
+
+## Holdings/Float/Supply - call them and update
+
+# vault.totalStrategyHoldings: number // view : gets updated on  StrategyDeposit, StrategyWithdraw, SeizeStrategy and Harvest
+# vault.totalSupply: number // view : gets updated on  Deposit, Withdraw, and Harvest (consider deriving this from Transfer)
+# vault.maxLockedProfit: number // view: gets changed every Harvest
+
+# Update these all the fuckin time - read from contracts
+# vault.lockedProfit: number // view:
+# vault.exchangeRate: number // view:
+# vault.totalFloat: number // view:
 # vault.totalHoldings: number
-# vault.totalStrategyHoldings: number
-# vault.totalFloat: number
-# vault.totalSupply: number
 
-# vault.maxLockedProfit: number
-# vault.lockedProfit: number // view: gets updated as much as possible?
-# vault.exchangeRate: number // view: gets updated as much as possible?
+# Note: might implement totalFees (read on the vault contract itself
 
-# vault.balanceOf{user} // don't implement
-# vault.balanceOfUnderlying{user} // don't implement
+# /// Important to derive and rely on from subgraph
 
 # vault.withdrawalQueue: strategy[]
-# vault.activeStrategies: strategy[]
+# vault.strategies: strategy[] // ?: trusted & balance >= 0
 # vault.trustedStrategies: strategy[] ✅
+
+# /// Save for Later
+# vault.balanceOf{user} // don't implement rn
+# vault.balanceOfUnderlying{user} // don't implement rn
 
 type Strategy @entity {
   id: ID!
 
+  # ERC20
+  name: String!
+  symbol: String!
+  balance: BigInt!
+
   # Public Attributes
   trusted: Boolean!
-  name: String!
   vault: Vault!
-
 }
 
-# strategy.trusted 🚧
-# strategy.balance
+# strategy.trusted ✅
+# strategy.balance ✅
 # strategy.name  ✅
 # strategy.queueIndex (-1 or something if not in)
-# strategy.vault (0x0 or something if no vault associated)✅
+# strategy.vault (0x0 or something if no vault associated) ✅
