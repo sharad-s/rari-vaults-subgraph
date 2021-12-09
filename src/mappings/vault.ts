@@ -27,6 +27,7 @@ import {
   WithdrawalQueuePopped,
   WithdrawalQueueIndexReplaced,
   WithdrawalQueueIndexesSwapped,
+  WithdrawalQueueIndexReplacedWithTip,
 } from "../../generated/templates/Vault/Vault";
 
 /*///////////////////////////////////////////////////////////////
@@ -596,6 +597,26 @@ export function handleWithdrawalIndexesSwapped(
 
   newWithdrawalQueue[event.params.index1.toI32()] = strategy2.toHexString();
   newWithdrawalQueue[event.params.index2.toI32()] = strategy1.toHexString();
+
+  vault.withdrawalQueue = newWithdrawalQueue;
+  vault.save();
+}
+
+export function handleWithdrawalQueueIndexReplacedWithTip(
+  event: WithdrawalQueueIndexReplacedWithTip
+): void {
+  let vaultId = event.address;
+
+  let replacementStrategy = event.params.replacedStrategy;
+
+  let vault = VaultSchema.load(vaultId.toHexString());
+
+  let newWithdrawalQueue: string[] = vault.withdrawalQueue;
+  newWithdrawalQueue[
+    event.params.index.toI32()
+  ] = replacementStrategy.toHexString();
+
+  newWithdrawalQueue.pop();
 
   vault.withdrawalQueue = newWithdrawalQueue;
   vault.save();

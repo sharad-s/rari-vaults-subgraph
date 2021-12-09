@@ -89,6 +89,8 @@ templates:
           handler: handleWithdrawalQueuePop
         - event: WithdrawalQueueIndexReplaced(indexed address,uint256,indexed address,indexed address)
           handler: handleWithdrawalQueueIndexReplaced
+        - event: WithdrawalQueueIndexReplacedWithTip(indexed address,uint256,indexed address,indexed address)
+          handler: handleWithdrawalQueueIndexReplacedWithTip
         - event: WithdrawalQueueIndexesSwapped(indexed address,uint256,uint256,indexed address,indexed address)
           handler: handleWithdrawalIndexesSwapped
 
@@ -135,7 +137,7 @@ templates:
 # - Withdraw(indexed address,uint256) 🚧
 
 # - WithdrawalQueueIndexReplaced(indexed address,uint256,indexed address,indexed address)✅
-# - WithdrawalQueueIndexReplacedWithTip(indexed address,uint256,indexed address,indexed address) 🚧
+# - WithdrawalQueueIndexReplacedWithTip(indexed address,uint256,indexed address,indexed address) ✅
 # - WithdrawalQueueIndexesSwapped(indexed address,uint256,uint256,indexed address,indexed address) ✅
 # - WithdrawalQueuePopped(indexed address,indexed address)✅
 # - WithdrawalQueuePushed(indexed address,indexed address)✅
